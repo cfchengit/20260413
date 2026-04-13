@@ -4,6 +4,7 @@ let works = [
   { title: '第二週作業', url: 'week2/' }
 ];
 
+let risingBubbles = []; // 背景上升的小氣泡
 let seaweeds = [];
 let fishes = [];
 let bubbles = [];
@@ -33,6 +34,11 @@ function setup() {
     fishes.push(new Fish());
   }
   
+  // 產生背景上升的小氣泡陣列
+  for (let i = 0; i < 40; i++) {
+    risingBubbles.push(new RisingBubble());
+  }
+  
   // 產生氣泡(作品展示板)
   let startX = width / 2 - (works.length * 150) / 2 + 75;
   for (let i = 0; i < works.length; i++) {
@@ -59,6 +65,12 @@ function draw() {
   for (let f of fishes) {
     f.update();
     f.display();
+  }
+  
+  // 更新與顯示背景上升小氣泡
+  for (let rb of risingBubbles) {
+    rb.update();
+    rb.display();
   }
   
   // 顯示漂浮的作品氣泡
@@ -222,5 +234,73 @@ class Bubble {
       return true;
     }
     return false;
+  }
+}
+
+// 4. 背景上升氣泡 Class (包含上升與破裂特效)
+class RisingBubble {
+  constructor() {
+    this.reset();
+    // 初始化時讓氣泡隨機分佈在整個畫面中，才不會一開始畫面是空的
+    this.y = random(height);
+  }
+  
+  reset() {
+    this.x = random(width);
+    this.y = height + random(10, 100); // 從畫面底部外面開始
+    this.r = random(3, 8); // 氣泡大小
+    this.speed = random(1, 3); // 上升速度
+    this.popHeight = random(height * 0.1, height * 0.6); // 在畫面上半部隨機高度破裂
+    this.isPopped = false;
+    this.popTimer = 0;
+    this.popDuration = 15; // 破裂動畫的持續禎數
+    this.offsetX = random(1000); // 擺動偏移量
+  }
+  
+  update() {
+    if (!this.isPopped) {
+      this.y -= this.speed; // 向上移動
+      this.x += sin(frameCount * 0.05 + this.offsetX) * 0.5; // S型輕微搖擺
+      
+      // 如果到達破裂高度，觸發破裂
+      if (this.y <= this.popHeight) {
+        this.isPopped = true;
+      }
+    } else {
+      // 進行破裂動畫計時
+      this.popTimer++;
+      if (this.popTimer > this.popDuration) {
+        this.reset(); // 動畫結束後，重置為新氣泡
+      }
+    }
+  }
+  
+  display() {
+    push();
+    if (!this.isPopped) {
+      // 繪製完整的小氣泡
+      fill(255, 255, 255, 60);
+      stroke(255, 255, 255, 150);
+      strokeWeight(1);
+      circle(this.x, this.y, this.r * 2);
+      // 高光
+      noStroke();
+      fill(255, 255, 255, 200);
+      circle(this.x - this.r * 0.3, this.y - this.r * 0.3, this.r * 0.4);
+    } else {
+      // 繪製破裂特效 (水滴向外擴散並淡出)
+      let alpha = map(this.popTimer, 0, this.popDuration, 200, 0); // 透明度逐漸消失
+      noStroke();
+      fill(255, 255, 255, alpha);
+      let expandR = this.r * 2 + this.popTimer * 1.5; // 擴散範圍
+      // 畫 5 個往外飛濺的小水滴
+      for(let i = 0; i < 5; i++) {
+        let angle = (TWO_PI / 5) * i;
+        let sx = this.x + cos(angle) * (expandR * 0.5);
+        let sy = this.y + sin(angle) * (expandR * 0.5);
+        circle(sx, sy, this.r * 0.4);
+      }
+    }
+    pop();
   }
 }
