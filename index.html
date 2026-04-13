@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>水底世界作品展</title>
+  <!-- 引入 p5.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden; /* 隱藏卷軸 */
+      background-color: #001e38;
+    }
+    #canvas-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+    /* Iframe 彈出視窗的樣式設定 */
+    #iframe-container {
+      display: none; /* 預設隱藏 */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      height: 80%;
+      z-index: 10;
+      background: rgba(0, 20, 40, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+      border: 2px solid #0ff;
+    }
+    #close-btn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      color: #0ff;
+      cursor: pointer;
+      background: none;
+      border: none;
+      transition: transform 0.2s;
+    }
+    #close-btn:hover {
+      transform: scale(1.2);
+    }
+    iframe {
+      width: 100%;
+      height: calc(100% - 60px);
+      margin-top: 50px;
+      border: none;
+      border-radius: 0 0 15px 15px;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container"></div>
+
+  <!-- 作品顯示區 -->
+  <div id="iframe-container">
+    <button id="close-btn">✖</button>
+    <iframe id="work-frame" src=""></iframe>
+  </div>
+
+  <script src="sketch.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 防止滾動條出現 */
+}
+
+canvas {
+  display: block;
+  position: fixed; /* 固定在視窗上 */
+  top: 0;
+  left: 0;
+  width: 100vw; /* 佔滿整個視窗寬度 */
+  height: 100vh; /* 佔滿整個視窗高度 */
+  z-index: 1; /* 確保在iframe上方 */
+  background-color: transparent; /* 使畫布背景透明 */
+  pointer-events: none; /* 允許滑鼠事件穿透畫布 */
+}
+
+#myIframe {
+  position: absolute;
+  width: 80vw;
+  height: 80vh;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 置中 */
+  z-index: 0; /* 確保在canvas下方 */
+}
